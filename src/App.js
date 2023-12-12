@@ -127,8 +127,8 @@ const App = () => {
             {tableData.length > 0 && (
                 <div className="table-container">
                     <div className='buttonsContainer'>
-                        <button className='btn' onClick={exportToCSV}>Export to CSV</button>
-                        <button className='btn' onClick={copyToClipboard}>Copy JSON to Clipboard</button>
+                        <button className='btn-export' onClick={exportToCSV}>Export to CSV</button>
+                        <button className='btn-save' onClick={copyToClipboard}>Copy JSON to Clipboard</button>
                         {/* <button onClick={saveData}>Save Changes</button> */}
                     </div>
                     <div className="table-container">

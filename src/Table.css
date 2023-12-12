@@ -89,6 +89,26 @@ tr:hover {
     cursor: pointer;
 }
 
+.btn-export {
+    align-items: center;
+    border-radius: 15px;
+    background-color: grey;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-save {
+    align-items: center;
+    border-radius: 15px;
+    background-color: teal;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
 
 .container {
     padding: 20px;
