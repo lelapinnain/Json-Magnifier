@@ -6,12 +6,26 @@ const App = () => {
     const [tableData, setTableData] = useState([]);
     const [editStatus, setEditStatus] = useState({ rowKey: null, cellName: null });
     const [searchQuery, setSearchQuery] = useState('');
+    const [jsonInput, setJsonInput] = useState('');
+
     
 
     useEffect(() => {
         setTableData(parseJsonData(jsonData));
     }, []);
 
+    const handleJsonInputChange = (e) => {
+      setJsonInput(e.target.value);
+    };
+    const handleParseJson = () => {
+      try {
+        const parsedData = JSON.parse(jsonInput);
+        setTableData(parseJsonData(parsedData));
+      } catch (error) {
+        alert('Invalid JSON');
+      }
+    };
+        
     const parseJsonData = (data) => {
         let parsedData = [];
         Object.keys(data).forEach(mainKey => {
@@ -52,16 +66,6 @@ const App = () => {
         return newJson;
     };
 
-    // const exportToCSV = () => {
-    //     let csvContent = "data:text/csv;charset=utf-8,";
-    //     csvContent += "Main Key, Sub Key, Value\n";
-    //     tableData.forEach(row => {
-    //         let rowContent = `${row.mainKey}, ${row.subKey}, ${row.value}\n`;
-    //         csvContent += rowContent;
-    //     });
-    //     const encodedUri = encodeURI(csvContent);
-    //     window.open(encodedUri);
-    // };
     const exportToCSV = () => {
       let csvContent = "data:text/csv;charset=utf-8,";
       csvContent += "Main Key, Sub Key, Value\n";
@@ -104,6 +108,17 @@ const App = () => {
                         className="search-input"
                     />
                 </div>
+            </div>
+            <div>
+            <textarea
+              value={jsonInput}
+              onChange={handleJsonInputChange}
+              placeholder="Paste your JSON here"
+              rows={10}
+              className="json-input-textarea"
+            />
+            <button className='btn' onClick={handleParseJson}>Load JSON</button>
+
             </div>
             <div className="table-container">
               <div className='buttonsContainer'>
