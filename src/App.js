@@ -37,12 +37,16 @@ const App = () => {
     const handleEdit = (index, key) => {
         setEditStatus({ rowKey: index, cellName: key });
     };
+    const handleBlur = () => {
+      setEditStatus({ rowKey: null, cellName: null });
+  };
 
-    const handleEditChange = (e, index, key) => {
-        const newData = [...tableData];
-        newData[index][key] = e.target.value;
-        setTableData(newData);
-    };
+  const handleEditChange = (e, index, key) => {
+      const newData = [...tableData];
+      newData[index][key] = e.target.value;
+      setTableData(newData);
+  };
+
 
     const saveData = () => {
         const newData = reconstructJson(tableData);
@@ -156,6 +160,7 @@ const App = () => {
                                                     type="text"
                                                     value={row.value}
                                                     onChange={(e) => handleEditChange(e, index, 'value')}
+                                                    onBlur={handleBlur}
                                                     className="edit-input"
                                                 />
                                                 : row.value
