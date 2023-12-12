@@ -11,6 +11,12 @@ const App = () => {
         setJsonInput(e.target.value);
     };
 
+    const handleReset = () => {
+      setTableData([]);
+      setJsonInput('');
+  };
+
+
     const handleParseJson = () => {
         try {
             const parsedData = JSON.parse(jsonInput);
@@ -48,10 +54,10 @@ const App = () => {
   };
 
 
-    const saveData = () => {
-        const newData = reconstructJson(tableData);
-        console.log("Saved Data:", newData);
-    };
+    // const saveData = () => {
+    //     const newData = reconstructJson(tableData);
+    //     console.log("Saved Data:", newData);
+    // };
 
     const reconstructJson = (tableData) => {
         let newJson = {};
@@ -133,7 +139,7 @@ const App = () => {
                     <div className='buttonsContainer'>
                         <button className='btn-export' onClick={exportToCSV}>Export to CSV</button>
                         <button className='btn-save' onClick={copyToClipboard}>Copy JSON to Clipboard</button>
-                        {/* <button onClick={saveData}>Save Changes</button> */}
+                        <button className='btn-reset' onClick={handleReset}>Reset</button> 
                     </div>
                     <div className="table-container">
                     <div className='table'>

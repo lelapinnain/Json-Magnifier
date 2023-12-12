@@ -109,6 +109,16 @@ tr:hover {
     cursor: pointer;
 }
 
+.btn-reset {
+    align-items: center;
+    border-radius: 15px;
+    background-color: tomato;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
 
 .container {
     padding: 20px;
