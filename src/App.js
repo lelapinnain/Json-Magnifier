@@ -61,23 +61,32 @@ const App = () => {
     };
 
     const exportToCSV = () => {
-        let csvContent = "data:text/csv;charset=utf-8,";
-        csvContent += "Main Key, Sub Key, Value\n";
-        tableData.forEach(row => {
-            let rowContent = `"${row.mainKey}", "${row.subKey}", "${row.value}"\n`;
-            csvContent += rowContent;
-        });
-
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "my_data.csv");
-        document.body.appendChild(link);
-
-        link.click();
-
-        document.body.removeChild(link);
-    };
+      // Get current date and time
+      const now = new Date();
+      const formattedDate = `${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}/${now.getFullYear()}`;
+      const formattedDateTime = `${formattedDate}${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
+  
+      // CSV content with title
+      let csvContent = "data:text/csv;charset=utf-8,";
+      csvContent += `Data as of ${formattedDate}\n`; 
+      csvContent += "Main Key, Sub Key, Value\n";
+      tableData.forEach(row => {
+          let rowContent = `"${row.mainKey}", "${row.subKey}", "${row.value}"\n`;
+          csvContent += rowContent;
+      });
+  
+      // Encode and create link
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `data_${formattedDateTime}.csv`); 
+      document.body.appendChild(link);
+  
+      // Trigger download and clean up
+      link.click();
+      document.body.removeChild(link);
+  };
+  
 
     const copyToClipboard = () => {
         const jsonStr = JSON.stringify(reconstructJson(tableData), null, 2);
@@ -118,9 +127,9 @@ const App = () => {
             {tableData.length > 0 && (
                 <div className="table-container">
                     <div className='buttonsContainer'>
-                        <button onClick={exportToCSV}>Export to CSV</button>
-                        <button onClick={copyToClipboard}>Copy JSON to Clipboard</button>
-                        <button onClick={saveData}>Save Changes</button>
+                        <button className='btn' onClick={exportToCSV}>Export to CSV</button>
+                        <button className='btn' onClick={copyToClipboard}>Copy JSON to Clipboard</button>
+                        {/* <button onClick={saveData}>Save Changes</button> */}
                     </div>
                     <div className="table-container">
                     <div className='table'>
