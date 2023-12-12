@@ -1,11 +1,10 @@
-table {
-    padding: 20px;
-    margin-left: 20px;
-    margin-right: 20px;
-}
-
 .table {
-    padding: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 90%;
+    /* Adjust this value as needed */
+    overflow-x: auto;
+    /* for horizontal scroll on small screens */
 }
 
 th,
@@ -43,6 +42,7 @@ th {
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
+    float: right;
 }
 
 .buttonsContainer {
@@ -54,12 +54,41 @@ th {
 .json-input-textarea {
     width: 100%;
     margin-bottom: 20px;
-    padding: 10px;
+    margin-right: 20px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    /* Adjust as needed */
 }
 
 .btn {
     align-items: center;
-    border-radius: 15;
-    margin-left: 700px;
+    border-radius: 15px;
     background-color: aquamarine;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+
+.container {
+    padding: 20px;
+    /* Added padding around the container */
+}
+
+@media screen and (max-width: 768px) {
+    .table {
+        max-width: 95%;
+        /* More width for smaller screens */
+    }
+
+    .container {
+        padding: 10px;
+        /* Less padding on smaller screens */
+    }
+
+    /* Adjust font size, padding, etc., for smaller screens as needed */
 }

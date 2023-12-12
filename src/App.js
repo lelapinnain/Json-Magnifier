@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import jsonData from './data.json';
+import React, { useState } from 'react';
 import './Table.css';
 
 const App = () => {
@@ -8,24 +7,19 @@ const App = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [jsonInput, setJsonInput] = useState('');
 
-    
-
-    useEffect(() => {
-        setTableData(parseJsonData(jsonData));
-    }, []);
-
     const handleJsonInputChange = (e) => {
-      setJsonInput(e.target.value);
+        setJsonInput(e.target.value);
     };
+
     const handleParseJson = () => {
-      try {
-        const parsedData = JSON.parse(jsonInput);
-        setTableData(parseJsonData(parsedData));
-      } catch (error) {
-        alert('Invalid JSON');
-      }
+        try {
+            const parsedData = JSON.parse(jsonInput);
+            setTableData(parseJsonData(parsedData));
+        } catch (error) {
+            alert('Invalid JSON');
+        }
     };
-        
+
     const parseJsonData = (data) => {
         let parsedData = [];
         Object.keys(data).forEach(mainKey => {
@@ -67,24 +61,23 @@ const App = () => {
     };
 
     const exportToCSV = () => {
-      let csvContent = "data:text/csv;charset=utf-8,";
-      csvContent += "Main Key, Sub Key, Value\n";
-      tableData.forEach(row => {
-          let rowContent = `"${row.mainKey}", "${row.subKey}", "${row.value}"\n`;
-          csvContent += rowContent;
-      });
-  
-      const encodedUri = encodeURI(csvContent);
-      const link = document.createElement("a");
-      link.setAttribute("href", encodedUri);
-      link.setAttribute("download", "my_data.csv");
-      document.body.appendChild(link); // Required for FF
-  
-      link.click(); // This will download the data file named "my_data.csv".
-  
-      document.body.removeChild(link); // Clean up
-  };
-  
+        let csvContent = "data:text/csv;charset=utf-8,";
+        csvContent += "Main Key, Sub Key, Value\n";
+        tableData.forEach(row => {
+            let rowContent = `"${row.mainKey}", "${row.subKey}", "${row.value}"\n`;
+            csvContent += rowContent;
+        });
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "my_data.csv");
+        document.body.appendChild(link);
+
+        link.click();
+
+        document.body.removeChild(link);
+    };
 
     const copyToClipboard = () => {
         const jsonStr = JSON.stringify(reconstructJson(tableData), null, 2);
@@ -96,9 +89,9 @@ const App = () => {
     };
 
     return (
-        <div>
-           <div className="header">
-            <h1>Editable JSON Data Table</h1>
+        <div className='container'>
+            <div className="header">
+               <h1>Convert Json to table</h1>
                 <div className="search-container">
                     <input
                         type="text"
@@ -110,57 +103,64 @@ const App = () => {
                 </div>
             </div>
             <div>
-            <textarea
-              value={jsonInput}
-              onChange={handleJsonInputChange}
-              placeholder="Paste your JSON here"
-              rows={10}
-              className="json-input-textarea"
-            />
-            <button className='btn' onClick={handleParseJson}>Load JSON</button>
+                <textarea
+                    value={jsonInput}
+                    onChange={handleJsonInputChange}
+                    placeholder="Paste your JSON here"
+                    rows={10}
+                    className="json-input-textarea"
+                />
+                <div className="button-container">
+                    <button className='btn' onClick={handleParseJson}>Load JSON</button>
+                </div>
 
             </div>
-            <div className="table-container">
-              <div className='buttonsContainer'>
-                <button onClick={exportToCSV}>Export to CSV</button>
-                <button onClick={copyToClipboard}>Copy JSON to Clipboard</button>
-                <button onClick={saveData}>Save Changes</button>
+            {tableData.length > 0 && (
+                <div className="table-container">
+                    <div className='buttonsContainer'>
+                        <button onClick={exportToCSV}>Export to CSV</button>
+                        <button onClick={copyToClipboard}>Copy JSON to Clipboard</button>
+                        <button onClick={saveData}>Save Changes</button>
+                    </div>
+                    <div className="table-container">
+                    <div className='table'>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Main Key</th>
+                                    <th>Sub Key</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {tableData.filter(row =>
+                                    row.mainKey.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                    row.subKey.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                    row.value.toLowerCase().includes(searchQuery.toLowerCase())
+                                ).map((row, index) => (
+                                    <tr key={index}>
+                                        <td>{row.mainKey}</td>
+                                        <td>{row.subKey}</td>
+                                        <td onClick={() => handleEdit(index, 'value')}>
+                                            {editStatus.rowKey === index && editStatus.cellName === 'value' ?
+                                                <input
+                                                    type="text"
+                                                    value={row.value}
+                                                    onChange={(e) => handleEditChange(e, index, 'value')}
+                                                    className="edit-input"
+                                                />
+                                                : row.value
+                                            }
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    </div>
+                   <div/>
                 </div>
-                <div className='table'>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Main Key</th>
-                            <th>Sub Key</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {tableData.filter(row => 
-                            row.mainKey.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            row.subKey.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            row.value.toLowerCase().includes(searchQuery.toLowerCase())
-                        ).map((row, index) => (
-                            <tr key={index}>
-                                <td>{row.mainKey}</td>
-                                <td>{row.subKey}</td>
-                                <td onClick={() => handleEdit(index, 'value')}>
-                                    {editStatus.rowKey === index && editStatus.cellName === 'value' ? 
-                                        <input 
-                                            type="text" 
-                                            value={row.value} 
-                                            onChange={(e) => handleEditChange(e, index, 'value')}
-                                            className="edit-input"
-                                        />
-                                        : row.value
-                                    }
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-                </div>
-            </div>
+            )}
         </div>
     );
 }
