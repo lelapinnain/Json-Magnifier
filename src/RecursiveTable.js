@@ -39,7 +39,7 @@ const RecursiveTable = ({ data, onRowCountChange,onUpdateData,keyPath = '', }) =
             return (
                 <input 
                     type="text" 
-                    className='search-input'
+                    className='edit-input'
                     value={editState.value} 
                     onChange={handleChange} 
                     onBlur={handleBlur} 
