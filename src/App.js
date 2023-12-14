@@ -5,9 +5,10 @@ import {filterData , formatForCSV} from './utils'
 
 const App = () => {
   const [jsonInput, setJsonInput] = useState('');
-  const [tableData, setTableData] = useState(null);
+  const [tableData, setTableData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [rowCount, setRowCount] = useState(0);
+
 
   const handleRowCountChange = (newCount) => {
       setRowCount(newCount);
@@ -61,6 +62,81 @@ const App = () => {
       document.body.removeChild(link);
   };
 
+//   const updateTableData = (rowKey, cellKey, newValue) => {
+//     console.log("Updating data:", rowKey, cellKey, newValue);
+
+//     setTableData(prevData => {
+//         // Check if prevData is an array
+//         if (Array.isArray(prevData)) {
+//             return prevData.map((item, index) => {
+//                 if (index === rowKey) {
+//                     return { ...item, [cellKey]: newValue };
+//                 }
+//                 return item;
+//             });
+//         }
+//         // If prevData is an object
+//         else if (typeof prevData === 'object' && prevData !== null) {
+//             return {
+//                 ...prevData,
+//                 [rowKey]: {
+//                     ...prevData[rowKey],
+//                     [cellKey]: newValue
+//                 }
+//             };
+//         }
+//         // If prevData is neither an array nor an object
+//         else {
+//             console.error('Unexpected data type for tableData:', prevData);
+//             return prevData; // Or handle this case as needed
+//         }
+//     });
+// };
+// const updateTableData = (keyPath, newValue) => {
+//   setTableData(prevData => {
+//       const keys = keyPath.split('.');
+//       const lastKey = keys.pop();
+//       let nested = prevData;
+
+//       keys.forEach(key => {
+//           if (!nested[key]) nested[key] = {}; 
+//           nested = nested[key];
+//       });
+
+//       nested[lastKey] = newValue;
+//       return { ...prevData };
+//   });
+// };
+const updateTableData = (keyPath, newValue) => {
+  setTableData(prevData => {
+      // Deep clone the previous data to avoid mutating state directly
+      let updatedData = JSON.parse(JSON.stringify(prevData));
+
+      // Split the keyPath and iterate to find the nested data
+      const keys = keyPath.split('.');
+      let nested = updatedData;
+
+      for (let i = 0; i < keys.length - 1; i++) {
+          const key = keys[i];
+          if (!nested[key]) nested[key] = {}; // Create new object if key doesn't exist
+          nested = nested[key];
+      }
+
+      // Update the value at the last key
+      nested[keys[keys.length - 1]] = newValue;
+
+      // Convert updated data back to JSON string
+      const updatedJsonString = JSON.stringify(updatedData, null, 2);
+      setJsonInput(updatedJsonString); // Update the jsonInput state
+
+      return updatedData; // Return the updated data
+  });
+};
+
+
+
+
+
   let filteredData = searchQuery ? filterData(tableData, searchQuery) : tableData;
 
   return (
@@ -98,7 +174,11 @@ const App = () => {
             <button className='btn-reset' onClick={handleReset}>Reset</button> 
               </div>
               <p>Number of Rows: {rowCount}</p>
-                  <RecursiveTable data={filteredData} onRowCountChange={handleRowCountChange} />
+              <RecursiveTable 
+            data={filteredData} 
+            onRowCountChange={handleRowCountChange} 
+            onUpdateData={updateTableData} 
+        />
               </div>
           )}
       </div>

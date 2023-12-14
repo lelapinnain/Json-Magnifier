@@ -1,7 +1,59 @@
-import React, {useEffect,useCallback} from 'react';
+import React, {useEffect,useCallback,useState,useRef} from 'react';
 import './Table.css';
 
-const RecursiveTable = ({ data, onRowCountChange }) => {
+const RecursiveTable = ({ data, onRowCountChange,onUpdateData,keyPath = '', }) => {
+    const [editState, setEditState] = useState({
+        keyPath: null,
+        value: ''
+    });
+    const activeCellRef = useRef(null);
+
+    const handleEdit = (keyPath, value) => {
+        setEditState({ keyPath, value });
+        activeCellRef.current = null; // Clear the ref
+    };
+
+    const handleChange = (e) => {
+        setEditState(prevState => ({ ...prevState, value: e.target.value }));
+    };
+
+    const handleBlur = useCallback(() => {
+        onUpdateData(editState.keyPath, editState.value);
+        setEditState({ keyPath: null, value: '' });
+    }, [editState, onUpdateData]);
+
+    useEffect(() => {
+        const handleOutsideClick = (event) => {
+            if (activeCellRef.current && !activeCellRef.current.contains(event.target)) {
+                handleBlur();
+            }
+        };
+        document.addEventListener('mousedown', handleOutsideClick);
+        return () => {
+            document.removeEventListener('mousedown', handleOutsideClick);
+        };
+    }, [handleBlur]);
+
+    const renderCell = (fullKeyPath, value) => {
+        if (editState.keyPath === fullKeyPath) {
+            return (
+                <input 
+                    type="text" 
+                    value={editState.value} 
+                    onChange={handleChange} 
+                    onBlur={handleBlur} 
+                    autoFocus
+                    ref={activeCellRef}
+                />
+            );
+        }
+        return (
+            <span onClick={() => handleEdit(fullKeyPath, value)}>
+                {value}
+            </span>
+        );
+    };
+    
     // Define countRows using useCallback to memoize it
     const countRows = useCallback((data) => {
         if (Array.isArray(data)) {
@@ -21,19 +73,39 @@ const RecursiveTable = ({ data, onRowCountChange }) => {
 
     // Recursive rendering logic
     if (Array.isArray(data)) {
-        return data.map((item, index) => <RecursiveTable key={index} data={item} onRowCountChange={() => {}} />);
+        return data.map((item, index) => (
+            <RecursiveTable 
+                key={index} 
+                data={item} 
+                onRowCountChange={() => {}} 
+                onUpdateData={onUpdateData}
+            />
+        ));
     } else if (typeof data === 'object' && data !== null) {
+        console.log("data",data)
         return (
             <table className="nested-table">
-                <tbody>
-                    {Object.entries(data).map(([key, value], index) => (
+            <tbody>
+                {Object.entries(data).map(([key, value], index) => {
+                    let newKeyPath = keyPath ? `${keyPath}.${key}` : key;
+                    return (
                         <tr key={index}>
                             <td>{key}</td>
-                            <td>{typeof value === 'object' ? <RecursiveTable data={value} onRowCountChange={() => {}} /> : value.toString()}</td>
+                            <td>
+                                {typeof value === 'object' && value !== null ? 
+                                    <RecursiveTable 
+                                        data={value} 
+                                        keyPath={newKeyPath}
+                                        onRowCountChange={() => {}} 
+                                        onUpdateData={onUpdateData}
+                                    /> : 
+                                    renderCell(newKeyPath, value)}
+                            </td>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    );
+                })}
+            </tbody>
+        </table>
         );
     } else {
         return <span>{data}</span>;
