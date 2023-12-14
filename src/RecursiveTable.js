@@ -39,6 +39,7 @@ const RecursiveTable = ({ data, onRowCountChange,onUpdateData,keyPath = '', }) =
             return (
                 <input 
                     type="text" 
+                    className='search-input'
                     value={editState.value} 
                     onChange={handleChange} 
                     onBlur={handleBlur} 
@@ -82,7 +83,6 @@ const RecursiveTable = ({ data, onRowCountChange,onUpdateData,keyPath = '', }) =
             />
         ));
     } else if (typeof data === 'object' && data !== null) {
-        console.log("data",data)
         return (
             <table className="nested-table">
             <tbody>

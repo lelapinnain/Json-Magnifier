@@ -5,9 +5,10 @@ import {filterData , formatForCSV} from './utils'
 
 const App = () => {
   const [jsonInput, setJsonInput] = useState('');
-  const [tableData, setTableData] = useState([]);
+  const [tableData, setTableData] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [rowCount, setRowCount] = useState(0);
+  
 
 
   const handleRowCountChange = (newCount) => {
@@ -19,7 +20,7 @@ const App = () => {
       setJsonInput(e.target.value);
   };
   const handleReset = () => {
-    setTableData(null);
+    setTableData([]);
     setJsonInput('');
     setSearchQuery('')
     filteredData=""
@@ -62,51 +63,7 @@ const App = () => {
       document.body.removeChild(link);
   };
 
-//   const updateTableData = (rowKey, cellKey, newValue) => {
-//     console.log("Updating data:", rowKey, cellKey, newValue);
 
-//     setTableData(prevData => {
-//         // Check if prevData is an array
-//         if (Array.isArray(prevData)) {
-//             return prevData.map((item, index) => {
-//                 if (index === rowKey) {
-//                     return { ...item, [cellKey]: newValue };
-//                 }
-//                 return item;
-//             });
-//         }
-//         // If prevData is an object
-//         else if (typeof prevData === 'object' && prevData !== null) {
-//             return {
-//                 ...prevData,
-//                 [rowKey]: {
-//                     ...prevData[rowKey],
-//                     [cellKey]: newValue
-//                 }
-//             };
-//         }
-//         // If prevData is neither an array nor an object
-//         else {
-//             console.error('Unexpected data type for tableData:', prevData);
-//             return prevData; // Or handle this case as needed
-//         }
-//     });
-// };
-// const updateTableData = (keyPath, newValue) => {
-//   setTableData(prevData => {
-//       const keys = keyPath.split('.');
-//       const lastKey = keys.pop();
-//       let nested = prevData;
-
-//       keys.forEach(key => {
-//           if (!nested[key]) nested[key] = {}; 
-//           nested = nested[key];
-//       });
-
-//       nested[lastKey] = newValue;
-//       return { ...prevData };
-//   });
-// };
 const updateTableData = (keyPath, newValue) => {
   setTableData(prevData => {
       // Deep clone the previous data to avoid mutating state directly
@@ -169,9 +126,9 @@ const updateTableData = (keyPath, newValue) => {
            
               <div className="table-container">
                  <div className='buttonsContainer'>
-            <button className='btn-save' onClick={handleCopyJson}>Copy JSON</button>
-            <button className='btn-export' onClick={exportToCSV}>Export as CSV</button>
-            <button className='btn-reset' onClick={handleReset}>Reset</button> 
+                  <button className='btn-save' onClick={handleCopyJson}>Copy JSON</button>
+                  <button className='btn-export' onClick={exportToCSV}>Export as CSV</button>
+                  <button className='btn-reset' onClick={handleReset}>Reset</button> 
               </div>
               <p>Number of Rows: {rowCount}</p>
               <RecursiveTable 
