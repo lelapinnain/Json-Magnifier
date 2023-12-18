@@ -2,12 +2,18 @@ import React, { useState } from 'react';
 import RecursiveTable from './RecursiveTable'
 import './Table.css';
 import {filterData , formatForCSV} from './utils'
+import CollapsibleJsonViewer from './CollapsibleJsonViewer';
 
 const App = () => {
   const [jsonInput, setJsonInput] = useState('');
   const [tableData, setTableData] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [rowCount, setRowCount] = useState(0);
+  const [viewMode, setViewMode] = useState('table');
+  const [showLoadBtn, setShowLoadBtn] = useState(true);
+
+
+
   
 
 
@@ -23,6 +29,7 @@ const App = () => {
     setTableData([]);
     setJsonInput('');
     setSearchQuery('')
+    setShowLoadBtn(true)
     filteredData=""
 };
 
@@ -30,6 +37,7 @@ const App = () => {
       try {
           const parsedData = JSON.parse(jsonInput);
           setTableData(parsedData);
+          setShowLoadBtn(false)
       } catch (error) {
           alert('Invalid JSON');
       }
@@ -91,6 +99,9 @@ const updateTableData = (keyPath, newValue) => {
 };
 
 
+const handleChangeViewMode = (e) => {
+  setViewMode(e.target.value);
+};
 
 
 
@@ -99,7 +110,7 @@ const updateTableData = (keyPath, newValue) => {
   return (
       <div className='container'>
           <div className="header">
-              <h1>Convert JSON to Table</h1>
+              <h1>JSON Magnifier</h1>
               <input
                   type="text"
                   value={searchQuery}
@@ -107,6 +118,12 @@ const updateTableData = (keyPath, newValue) => {
                   placeholder="Search..."
                   className="search-input"
               />
+          </div>
+          <div className="view-mode-selector">
+            <select className="view-mode-dropdown" value={viewMode} onChange={handleChangeViewMode}>
+              <option value="table">Table View</option>
+              <option value="json">JSON View</option>
+            </select>
           </div>
           <div>
               <textarea
@@ -116,13 +133,15 @@ const updateTableData = (keyPath, newValue) => {
                   rows={10}
                   className="json-input-textarea"
               />
+              {showLoadBtn&& (
               <div className="button-container">
                   <button className='btn' onClick={handleParseJson}>Load JSON</button>
                  
               </div>
+              )}
           </div>
          
-          {filteredData && jsonInput&&tableData&&(
+          {filteredData && jsonInput&&tableData&& viewMode === 'table'&&(
            
               <div className="table-container">
                  <div className='buttonsContainer'>
@@ -138,8 +157,14 @@ const updateTableData = (keyPath, newValue) => {
         />
               </div>
           )}
+            {viewMode === 'json' && (
+        <div className="json-viewer">
+          <CollapsibleJsonViewer data={filteredData} />
+        </div>
+      )}
       </div>
   );
 }
 
 export default App;
+
