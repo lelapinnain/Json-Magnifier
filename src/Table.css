@@ -20,7 +20,6 @@ td {
     padding: 12px 15px;
     /* Increased padding */
     text-align: left;
-    border-bottom: 1px solid #ddd;
     /* Light border for separation */
 }
 
@@ -47,16 +46,22 @@ tr:hover {
     align-items: center;
     margin-bottom: 20px;
     padding: 20px;
-    background-color: #f8f8f8; /* Light background color */
-    border-bottom: 1px solid #e7e7e7; /* Subtle bottom border */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern, clean font */
-    color: #333; /* Darker text for contrast */
-    
+    background-color: #f8f8f8;
+    /* Light background color */
+    border-bottom: 1px solid #e7e7e7;
+    /* Subtle bottom border */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Soft shadow for depth */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* Modern, clean font */
+    color: #333;
+    /* Darker text for contrast */
+
     /* Sticky header specific styles */
     position: sticky;
     top: 0;
-    z-index: 1000; /* High z-index to ensure it's above other content */
+    z-index: 1000;
+    /* High z-index to ensure it's above other content */
 }
 
 .header h1 {
@@ -174,10 +179,32 @@ tr:hover {
     cursor: pointer;
 }
 
+.reset-button-container {
+    display: flex;
+    justify-content: center;
+    /* Center horizontally */
+    align-items: center;
+    /* Center vertically */
+    width: fit-content;
+    /* Container width fits its content */
+    margin: auto;
+}
+
+.btn-reset-json {
+    align-items: center;
+    border-radius: 15px;
+    background-color: tomato;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+
 
 .container {
     padding: 20px;
-    
+
 }
 
 @media screen and (max-width: 768px) {
@@ -212,7 +239,6 @@ tr:hover {
     border-color: #555;
 }
 
-/* Style the dropdown arrow */
 .view-mode-dropdown::-ms-expand {
     display: none;
 }

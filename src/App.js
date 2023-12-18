@@ -13,10 +13,6 @@ const App = () => {
   const [showLoadBtn, setShowLoadBtn] = useState(true);
 
 
-
-  
-
-
   const handleRowCountChange = (newCount) => {
       setRowCount(newCount);
   };
@@ -141,7 +137,7 @@ const handleChangeViewMode = (e) => {
               )}
           </div>
          
-          {filteredData && jsonInput&&tableData&& viewMode === 'table'&&(
+          {filteredData && jsonInput&& !showLoadBtn&& viewMode === 'table'&&(
            
               <div className="table-container">
                  <div className='buttonsContainer'>
@@ -158,9 +154,17 @@ const handleChangeViewMode = (e) => {
               </div>
           )}
             {viewMode === 'json' && (
-        <div className="json-viewer">
-          <CollapsibleJsonViewer data={filteredData} />
-        </div>
+                <>
+                 {!showLoadBtn&& (
+                <div class="reset-button-container">
+                  <button className='btn-reset-json' onClick={handleReset}>Reset</button> 
+                  </div>
+                 )}
+                  <div className="json-viewer">
+                    <CollapsibleJsonViewer data={filteredData} />
+                  </div>
+                </>
+             
       )}
       </div>
   );
