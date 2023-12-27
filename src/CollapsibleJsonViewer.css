@@ -1,0 +1,55 @@
+.json-viewer-container {
+    font-family: 'Courier New', monospace;
+    overflow-y: auto;
+    max-height: 400px;
+    padding: 10px;
+}
+
+.json-viewer-item {
+    margin-left: 20px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.collapse-toggle {
+    cursor: pointer;
+    margin-right: 5px;
+    user-select: none;
+}
+
+.json-key {
+    color: #3333cc;
+}
+
+.json-value {
+    color: #008000;
+    /* Green color for values */
+}
+
+.collapse-toggle .fa-icon {
+    font-size: 1rem;
+    /* Adjust size as needed */
+    color: #007bff;
+    /* Change to your preferred color */
+}
+
+/* Alternatively, if you're directly styling the span containing the icon */
+.collapse-toggle {
+    cursor: pointer;
+    margin-right: 5px;
+    color: #007bff;
+    /* Change to your preferred color */
+}
+
+.json-viewer-container button {
+    margin: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.json-viewer-container button:hover {
+    background-color: #e0e0e0;
+}
