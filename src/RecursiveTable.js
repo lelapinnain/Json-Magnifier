@@ -1,6 +1,19 @@
 import React, {useEffect,useCallback,useState,useRef} from 'react';
 import './Table.css';
 
+function parseIfJson(value) {
+    if (typeof value === 'string') {
+        try {
+            return JSON.parse(value);
+        } catch (error) {
+            return value;
+        }
+    }
+    return value;
+}
+
+
+
 const RecursiveTable = ({ data, onRowCountChange,onUpdateData,keyPath = '', }) => {
     const [editState, setEditState] = useState({
         keyPath: null,
@@ -22,6 +35,16 @@ const RecursiveTable = ({ data, onRowCountChange,onUpdateData,keyPath = '', }) =
         setEditState({ keyPath: null, value: '' });
     }, [editState, onUpdateData]);
 
+    // const parseIfJson=(value)=> {
+    //     try {
+    //         const parsedValue = JSON.parse(value);
+    //         return typeof parsedValue === 'object' ? parsedValue : value;
+    //     } catch (error) {
+    //         return value;
+    //     }
+    // }
+    
+
     useEffect(() => {
         const handleOutsideClick = (event) => {
             if (activeCellRef.current && !activeCellRef.current.contains(event.target)) {
@@ -35,6 +58,22 @@ const RecursiveTable = ({ data, onRowCountChange,onUpdateData,keyPath = '', }) =
     }, [handleBlur]);
 
     const renderCell = (fullKeyPath, value) => {
+        // Parse the value if it's a JSON string
+        const displayValue = parseIfJson(value);
+    
+        // Check if the displayValue is an object or array and render a RecursiveTable for it
+        if (typeof displayValue === 'object' && displayValue !== null) {
+            return (
+                <RecursiveTable 
+                    data={displayValue} 
+                    onRowCountChange={() => {}} 
+                    onUpdateData={onUpdateData}
+                    keyPath={fullKeyPath}
+                />
+            );
+        }
+    
+        // For simple values or unparseable strings, allow editing as before
         if (editState.keyPath === fullKeyPath) {
             return (
                 <input 
@@ -48,12 +87,15 @@ const RecursiveTable = ({ data, onRowCountChange,onUpdateData,keyPath = '', }) =
                 />
             );
         }
+    
         return (
-            <span onClick={() => handleEdit(fullKeyPath, value)}>
-                {value}
+            <span onClick={() => handleEdit(fullKeyPath, JSON.stringify(displayValue))}>
+                {JSON.stringify(displayValue, null, 2)}
             </span>
         );
     };
+    
+    
     
     // Define countRows using useCallback to memoize it
     const countRows = useCallback((data) => {

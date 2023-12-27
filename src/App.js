@@ -11,6 +11,8 @@ const App = () => {
   const [rowCount, setRowCount] = useState(0);
   const [viewMode, setViewMode] = useState('table');
   const [showLoadBtn, setShowLoadBtn] = useState(true);
+  const [parsedJson, setParsedJson] = useState('');
+
 
 
   const handleRowCountChange = (newCount) => {
@@ -26,30 +28,63 @@ const App = () => {
     setJsonInput('');
     setSearchQuery('')
     setShowLoadBtn(true)
-    filteredData=""
 };
 
+  // const handleParseJson = () => {
+  //     try {
+  //         const parsedData = JSON.parse(jsonInput);
+  //         setTableData(parsedData);
+  //         setShowLoadBtn(false)
+  //     } catch (error) {
+  //         alert('Invalid JSON');
+  //     }
+  // };
+  const recursivelyParseJsonStrings = (obj) => {
+    Object.keys(obj).forEach(key => {
+        if (typeof obj[key] === 'string') {
+            try {
+                obj[key] = JSON.parse(obj[key]);
+            } catch (e) {
+                // Not a JSON string, do nothing
+            }
+        } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+            recursivelyParseJsonStrings(obj[key]);
+        }
+    });
+};
   const handleParseJson = () => {
-      try {
-          const parsedData = JSON.parse(jsonInput);
-          setTableData(parsedData);
-          setShowLoadBtn(false)
-      } catch (error) {
-          alert('Invalid JSON');
-      }
-  };
+    try {
+      let parsedData = JSON.parse(jsonInput);
+      recursivelyParseJsonStrings(parsedData);
+      setTableData(parsedData);
+      setJsonInput(JSON.stringify(parsedData, null, 2))
+      setParsedJson(JSON.stringify(parsedData, null, 2)); // Store the parsed data
+      setShowLoadBtn(false);
+  } catch (error) {
+      alert('Invalid JSON');
+  }
+};
+
 
   const handleSearchChange = (e) => {
       setSearchQuery(e.target.value);
   };
 
+  // const handleCopyJson = () => {
+  //     navigator.clipboard.writeText(jsonInput).then(() => {
+  //         alert('JSON copied to clipboard!');
+  //     }, (err) => {
+  //         console.error('Could not copy text: ', err);
+  //     });
+  // };
   const handleCopyJson = () => {
-      navigator.clipboard.writeText(jsonInput).then(() => {
-          alert('JSON copied to clipboard!');
-      }, (err) => {
-          console.error('Could not copy text: ', err);
-      });
-  };
+    navigator.clipboard.writeText(parsedJson).then(() => {
+        alert('Parsed JSON copied to clipboard!');
+    }, (err) => {
+        console.error('Could not copy text: ', err);
+    });
+};
+
 
   const exportToCSV = () => {
       // Get current date 
@@ -156,7 +191,7 @@ const handleChangeViewMode = (e) => {
             {viewMode === 'json' && (
                 <>
                  {!showLoadBtn&& (
-                <div class="reset-button-container">
+                <div className="reset-button-container">
                   <button className='btn-reset-json' onClick={handleReset}>Reset</button> 
                   </div>
                  )}
