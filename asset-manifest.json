@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/lelapinnain/Json-Magnifier/static/css/main.c7ecbd68.css",
+    "main.js": "/lelapinnain/Json-Magnifier/static/js/main.ac2a6d4c.js",
+    "static/js/787.b256d94f.chunk.js": "/lelapinnain/Json-Magnifier/static/js/787.b256d94f.chunk.js",
+    "index.html": "/lelapinnain/Json-Magnifier/index.html",
+    "main.c7ecbd68.css.map": "/lelapinnain/Json-Magnifier/static/css/main.c7ecbd68.css.map",
+    "main.ac2a6d4c.js.map": "/lelapinnain/Json-Magnifier/static/js/main.ac2a6d4c.js.map",
+    "787.b256d94f.chunk.js.map": "/lelapinnain/Json-Magnifier/static/js/787.b256d94f.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c7ecbd68.css",
+    "static/js/main.ac2a6d4c.js"
+  ]
+}
